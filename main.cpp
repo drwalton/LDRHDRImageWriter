@@ -12,6 +12,8 @@ const TGAColor redTGA   = TGAColor(255, 0,   0,   255);
 
 
 // Loads a PPM file, returning the data as a std::vector of 16-bit unsigned integers.
+// PPM must be in "Plain" ASCII format, see https://netpbm.sourceforge.net/doc/ppm.html
+// In GIMP, use the ASCII option when saving.
 // The values are in blue, green, red order, in rows going down the image from left to right.
 // Image dimensions and the maximum intensity value are passed in as pointers and set by
 // this function.
@@ -53,6 +55,34 @@ std::vector<uint16_t> loadPPM(const std::string& filename, int* width, int* heig
 	}
 
 	return data;
+}
+
+// Saves a PPM in "Plain" (ASCII) format https://netpbm.sourceforge.net/doc/ppm.html
+// Note: Data must be of size width*height*3, containing BGR pixel values.
+//       User should ensure that all data values fall in the [0, maxVal] range.
+void savePPM(const std::string& filename, const std::vector<uint16_t>& data, int width, int height, uint16_t maxVal = 65535)
+{
+	if (data.size() != width * height * 3) {
+		throw std::runtime_error("Invalid data size in savePPM. Must be width*height*3 for RGB.");
+	}
+
+	ofstream outFile(filename, ios_base::out);
+
+	// PPM Plain magic number.
+	outFile << "P3\n";
+
+	// Image dimensions.
+	outFile << width << " " << height << " " << maxVal << "\n";
+
+	// Saving raster data.
+	for (int i = 0; i < width * height; ++i) {
+		outFile
+			<< data[i * 3 + 0] << " "
+			<< data[i * 3 + 1] << " "
+			<< data[i * 3 + 2] << "\n";
+	}
+
+	outFile.close();
 }
 
 // Clips a floating-point value, forcing it to be between min and max (inclusive).
