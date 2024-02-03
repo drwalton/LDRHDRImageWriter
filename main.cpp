@@ -105,17 +105,8 @@ int main(int argc, char** argv) {
 		TGAImage image(width, height, TGAImage::RGB);
 		for (int r = 0; r < height; ++r) 
 			for (int c = 0; c < width; ++c) {
-				auto blue = imageData[3 * (r * width + c) + 0];
-				auto green = imageData[3 * (r * width + c) + 1];
-				auto red = imageData[3 * (r * width + c) + 2];
 
-				int blueOut = static_cast<int>(clipf(exposure * static_cast<float>(blue), 0.0f, 255.0f));
-				int greenOut = static_cast<int>(clipf(exposure * static_cast<float>(green), 0.0f, 255.0f));
-				int redOut = static_cast<int>(clipf(exposure * static_cast<float>(red), 0.0f, 255.0f));
-
-
-				TGAColor color(blueOut, greenOut, redOut, 255);
-				image.set(c, r, color);
+				// Replace the following with your own code!
 
 				if (r > height / 2) {
 					image.set(c, r, whiteTGA);
